@@ -9,5 +9,5 @@ public class DatasourceStarterApplication {
     public static void main(String[] args) {
         SpringApplication.run(DatasourceStarterApplication.class, args);
     }
-
 }
+

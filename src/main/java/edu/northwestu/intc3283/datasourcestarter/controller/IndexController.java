@@ -3,13 +3,16 @@ package edu.northwestu.intc3283.datasourcestarter.controller;
 import edu.northwestu.intc3283.datasourcestarter.entity.Entry;
 import edu.northwestu.intc3283.datasourcestarter.repository.EntryRepository;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 public class IndexController {
@@ -44,6 +47,12 @@ public class IndexController {
     public String submitEntry(final @Valid @ModelAttribute("entry") Entry input,
                               final BindingResult bindingResult,
                               final Model model) {
+
+
+        if (this.entryRepository.findByEmailEqualsIgnoreCase(input.getEmail()).isPresent()) {
+            bindingResult.addError(new ObjectError("entry", "email already in use"));
+        }
+
         if (bindingResult.hasErrors()) {
             return "form";
         }
